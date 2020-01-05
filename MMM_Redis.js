@@ -7,6 +7,8 @@
  * MIT Licensed.
  */
 
+var redis = require("redis");
+
 Module.register("MMM_Redis",{
 
 	// Default module config.
@@ -15,9 +17,9 @@ Module.register("MMM_Redis",{
 	},
 
 	// Define required scripts.
-	getScripts: function() {
-		return ["redis.js"];
-	},
+	//getScripts: function() {
+	//	return ["redis.js"];
+	//},
 
 	// Define start sequence.
 	start: function() {
