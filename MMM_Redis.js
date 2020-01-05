@@ -14,11 +14,10 @@ Module.register("MMM_Redis",{
 		text: "Hello World!"
 	},
 
-	getTemplate: function () {
-		return "helloworld.njk";
-	},
-
-	getTemplateData: function () {
-		return this.config;
+	// Override dom generator.
+	getDom: function() {
+		var wrapper = document.createElement("div");
+		wrapper.innerHTML = this.config.text;
+		return wrapper;
 	}
 });
