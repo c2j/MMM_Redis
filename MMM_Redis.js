@@ -29,35 +29,33 @@ Module.register("MMM_Redis",{
 		var wrapper = document.createElement("div");
 		wrapper.innerHTML = this.config.text;
 
-		var client = redis.createClient(6379, "localhost");
+		var redisSubClient = redis.createClient(6379, "localhost");
 	
-		//sys.puts("waiting for messages...");
-		client.on(
-			"error",
-			function(err){
-				console.log("err"+err);
-				}
-		);
-		client.subscribe("face_message");
-		client.on('subscribe',
-			function(channel,count){
-				console.log("channel:" + channel + ", count:"+count);
-				}
-		);
-		client.on('message',
-			function(channel,message){
-				console.log("channel:" + channel + ", msg:"+message);
-				wrapper.innerHTML = message;
-				}
-		);
-		client.on('unsubscribe',
-			function(channel,count){
-				console.log("channel:" + channel + ", count:"+count);
-	
-		/* ————————————————
-		版权声明：本文为CSDN博主「cuipingxu51111」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
-		原文链接：https://blog.csdn.net/cuipingxu51111/article/details/40183925
-		*/
+		var key = 'face_message';
+		// 客户端连接redis成功后执行回调
+		redisSubClient.on("ready", () => {
+			// 订阅消息
+			redisSubClient.subscribe(key);
+			console.log("订阅成功。。。");
+		});
+
+		redisSubClient.on("error", error => {
+			console.log("Redis Error " + error);
+		});
+		// 监听订阅成功事件
+		redisSubClient.on('subscribe', (channel, count)=>{
+			console.log("client subscribed to " + channel + "," + count + "total subscriptions");
+		});
+		// 收到消息后执行回调
+		redisSubClient.on('message', (channel, message)=>{
+			console.log(`收到 ${channel} 频道的消息： ${message}`);
+			wrapper.innerHTML = message;
+		});
+		// 监听取消订阅事件
+		redisSubClient.on("unsubscribe", (channel, count) => {
+			console.log("client unsubscribed from" + channel + ", " + count + " total subscriptions")
+		});
+
 
 		self.wrapper = wrapper;
 	}
