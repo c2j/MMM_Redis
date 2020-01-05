@@ -33,8 +33,8 @@ Module.register("MMM_Redis",{
 		// Schedule update interval.
 		var self = this;
 		
-		setInterval( () => { self.updateDom(2); } , self.config.refreshInterval);
-
+		//setInterval( () => { self.updateDom(2); } , self.config.refreshInterval);
+		this.sendSocketNotification("CONFIG", this.config);
 		
 	},
 
@@ -62,7 +62,9 @@ Module.register("MMM_Redis",{
 	getDom: function () {
 		var self = this;
 		var wrapper = document.createElement("div");
-		wrapper.innerHTML = self.text;
+		if(this.suspended==false){
+			wrapper.innerHTML = self.text;
+		}
 		return wrapper;
 	},
 

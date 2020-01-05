@@ -15,6 +15,7 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived: function (notification, payload) {
         var self = this;
+        Log.info(notification+" "+payload);
 		if (notification === "CONFIG") {
             this.config = payload;
             var key = this.config.channel;
@@ -25,24 +26,24 @@ module.exports = NodeHelper.create({
             redisSubClient.on("ready", () => {
                 // 订阅消息
                 redisSubClient.subscribe(key);
-                console.log("订阅成功。。。");
+                Log.info("订阅成功。。。");
             });
 
             redisSubClient.on("error", error => {
-                console.log("Redis Error " + error);
+                Log.info("Redis Error " + error);
             });
             // 监听订阅成功事件
             redisSubClient.on('subscribe', (channel, count)=>{
-                console.log("client subscribed to " + channel + "," + count + "total subscriptions");
+                Log.info("client subscribed to " + channel + "," + count + "total subscriptions");
             });
             // 收到消息后执行回调
             redisSubClient.on('message', (channel, message)=>{
-                console.log(`收到 ${channel} 频道的消息： ${message}`);
+                Log.info(`收到 ${channel} 频道的消息： ${message}`);
                 self.sendSocketNotification("STATUS", message);
             });
             // 监听取消订阅事件
             redisSubClient.on("unsubscribe", (channel, count) => {
-                console.log("client unsubscribed from" + channel + ", " + count + " total subscriptions")
+                Log.info("client unsubscribed from" + channel + ", " + count + " total subscriptions")
             });
 		} 
 	}
