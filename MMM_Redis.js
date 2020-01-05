@@ -7,7 +7,7 @@
  * MIT Licensed.
  */
 
-Module.register("helloworld",{
+Module.register("MMM_Redis",{
 
 	// Default module config.
 	defaults: {
