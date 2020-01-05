@@ -35,10 +35,11 @@ Module.register("MMM_Redis",{
 		
 		//setInterval( () => { self.updateDom(2); } , self.config.refreshInterval);
 		this.sendSocketNotification("CONFIG", this.config);
-		
+		Log.info("Started module: " + this.name);
 	},
 
 	notificationReceived: function (notification, payload, sender) {
+		Log.info(notification+" "+payload);
 		if (notification === "DOM_OBJECTS_CREATED") {
 			this.sendSocketNotification("CONFIG", this.config);
 			
