@@ -21,7 +21,7 @@ Module.register("MMM_Redis",{
 
 		var client = require("redis").createClient(6379, "localhost");
 	
-		sys.puts("waiting for messages...");
+		//sys.puts("waiting for messages...");
 		client.on(
 			"error",
 			function(err){
