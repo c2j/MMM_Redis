@@ -7,14 +7,19 @@
  * MIT Licensed.
  */
 
-var redis = require("redis");
+
 
 Module.register("MMM_Redis",{
 
 	// Default module config.
 	defaults: {
-		text: "Hello World!"
+		text: "Hello World!",
+		updateInterval: 10 * 60 * 1000, // every 10 minutes
+		refreshInterval: 24 * 60 * 60 * 1000, // one day
+		channel: "face_message",
 	},
+
+	suspended: false,
 
 	// Define required scripts.
 	//getScripts: function() {
@@ -27,45 +32,45 @@ Module.register("MMM_Redis",{
 
 		// Schedule update interval.
 		var self = this;
+		
+		setInterval( () => { self.updateDom(2); } , self.config.refreshInterval);
 
-		var wrapper = document.createElement("div");
-		wrapper.innerHTML = this.config.text;
+		
+	},
 
-		var redisSubClient = redis.createClient(6379, "localhost");
-	
-		var key = 'face_message';
-		// 客户端连接redis成功后执行回调
-		redisSubClient.on("ready", () => {
-			// 订阅消息
-			redisSubClient.subscribe(key);
-			console.log("订阅成功。。。");
-		});
+	notificationReceived: function (notification, payload, sender) {
+		if (notification === "DOM_OBJECTS_CREATED") {
+			this.sendSocketNotification("CONFIG", this.config);
+			
+		}
+	},
 
-		redisSubClient.on("error", error => {
-			console.log("Redis Error " + error);
-		});
-		// 监听订阅成功事件
-		redisSubClient.on('subscribe', (channel, count)=>{
-			console.log("client subscribed to " + channel + "," + count + "total subscriptions");
-		});
-		// 收到消息后执行回调
-		redisSubClient.on('message', (channel, message)=>{
-			console.log(`收到 ${channel} 频道的消息： ${message}`);
-			wrapper.innerHTML = message;
-		});
-		// 监听取消订阅事件
-		redisSubClient.on("unsubscribe", (channel, count) => {
-			console.log("client unsubscribed from" + channel + ", " + count + " total subscriptions")
-		});
+	socketNotificationReceived: function (notification, payload) {
+		if (notification === "STATUS") {
+			this.updateUI(payload);
+		}
+	},
 
-
-		self.wrapper = wrapper;
+	updateUI: function (payload) {
+		var self = this;
+		self.text = payload;
+		self.updateDom(2);
+		
 	},
 
 	// Override dom generator.
-	getDom: function() {
+	getDom: function () {
 		var self = this;
-		var wrapper = self.wrapper;
+		var wrapper = document.createElement("div");
+		wrapper.innerHTML = self.text;
 		return wrapper;
+	},
+
+	suspend: function() {
+		this.suspended=true;
+	},
+	resume: function() {
+		this.suspended=false;
+		this.updateDom(2);
 	}
 });
