@@ -14,12 +14,22 @@ Module.register("MMM_Redis",{
 		text: "Hello World!"
 	},
 
-	// Override dom generator.
-	getDom: function() {
+	// Define required scripts.
+	getScripts: function() {
+		return ["redis.js"];
+	},
+
+	// Define start sequence.
+	start: function() {
+		Log.info("Starting module: " + this.name);
+
+		// Schedule update interval.
+		var self = this;
+
 		var wrapper = document.createElement("div");
 		wrapper.innerHTML = this.config.text;
 
-		var client = require("redis").createClient(6379, "localhost");
+		var client = redis.createClient(6379, "localhost");
 	
 		//sys.puts("waiting for messages...");
 		client.on(
@@ -44,11 +54,18 @@ Module.register("MMM_Redis",{
 			function(channel,count){
 				console.log("channel:" + channel + ", count:"+count);
 	
-	/* ————————————————
-	版权声明：本文为CSDN博主「cuipingxu51111」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
-	原文链接：https://blog.csdn.net/cuipingxu51111/article/details/40183925
-	*/
-		
+		/* ————————————————
+		版权声明：本文为CSDN博主「cuipingxu51111」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+		原文链接：https://blog.csdn.net/cuipingxu51111/article/details/40183925
+		*/
+
+		self.wrapper = wrapper;
+	}
+
+	// Override dom generator.
+	getDom: function() {
+		var self = this;
+		var wrapper = self.wrapper;
 		return wrapper;
 	}
 });
