@@ -58,7 +58,7 @@ Module.register("MMM_Redis",{
 
 
 		self.wrapper = wrapper;
-	}
+	},
 
 	// Override dom generator.
 	getDom: function() {
