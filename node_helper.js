@@ -9,12 +9,14 @@ module.exports = NodeHelper.create({
 	updateProcessStarted: false,
 
 	start: function () {
+        console.log("Redis Help start...");
 	},
 
 	
 
 	socketNotificationReceived: function (notification, payload) {
         var self = this;
+        console.log("Redis Help socketNotificationReceived...");
         console.info(notification+" "+payload);
 		if (notification === "CONFIG") {
             this.config = payload;
