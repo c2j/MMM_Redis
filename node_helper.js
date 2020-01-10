@@ -33,7 +33,8 @@ module.exports = NodeHelper.create({
         redisSubClient.on('message', (channel, message)=>{
             console.log(`收到 ${channel} 频道的消息： ${message}`);
             //self.sendSocketNotification("STATUS", message);
-            self.sendNotification("STATUS", message);
+            //self.sendNotification("STATUS", message);
+            self.updateMessage(message);
         });
         // 监听取消订阅事件
         redisSubClient.on("unsubscribe", (channel, count) => {
@@ -41,7 +42,10 @@ module.exports = NodeHelper.create({
         });
 	},
 
-	
+	updateMessage: function(msg) {
+        var self = this;
+        self.sendSocketNotification("STATUS", msg);
+    },
     
 	socketNotificationReceived: function(notification, payload) {
         var self = this;
