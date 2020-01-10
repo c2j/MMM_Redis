@@ -9,6 +9,7 @@ module.exports = NodeHelper.create({
 	updateProcessStarted: false,
 
 	start: function () {
+        var self = this;
         console.log("Redis Help start...");
         var key = "face_message"; //this.config.channel;
 
