@@ -45,6 +45,8 @@ Module.register("MMM_Redis",{
 			Log.info("Notify DOM_OBJECTS_CREATED")
 			self.sendSocketNotification("CONFIG", this.config);
 			
+		}else if (notification === "STATUS") {
+			this.updateUI(payload);
 		}
 	},
 
