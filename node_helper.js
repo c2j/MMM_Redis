@@ -18,24 +18,24 @@ module.exports = NodeHelper.create({
         redisSubClient.on("ready", () => {
             // 订阅消息
             redisSubClient.subscribe(key);
-            console.info("订阅成功。。。");
+            console.log("订阅成功。。。");
         });
 
         redisSubClient.on("error", error => {
-            console.info("Redis Error " + error);
+            console.log("Redis Error " + error);
         });
         // 监听订阅成功事件
         redisSubClient.on('subscribe', (channel, count)=>{
-            console.info("client subscribed to " + channel + "," + count + "total subscriptions");
+            console.log("client subscribed to " + channel + "," + count + "total subscriptions");
         });
         // 收到消息后执行回调
         redisSubClient.on('message', (channel, message)=>{
-            Log.info(`收到 ${channel} 频道的消息： ${message}`);
+            console.log(`收到 ${channel} 频道的消息： ${message}`);
             self.sendSocketNotification("STATUS", message);
         });
         // 监听取消订阅事件
         redisSubClient.on("unsubscribe", (channel, count) => {
-            console.info("client unsubscribed from" + channel + ", " + count + " total subscriptions")
+            console.log("client unsubscribed from" + channel + ", " + count + " total subscriptions")
         });
 	},
 
