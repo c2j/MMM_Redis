@@ -39,15 +39,17 @@ Module.register("MMM_Redis",{
 	},
 
 	notificationReceived: function (notification, payload, sender) {
-		Log.info(notification+" "+payload);
+		var self = this;
+		Log.info("notificationReceived "+notification+" "+payload);
 		if (notification === "DOM_OBJECTS_CREATED") {
 			Log.info("Notify DOM_OBJECTS_CREATED")
-			this.sendSocketNotification("CONFIG", this.config);
+			self.sendSocketNotification("CONFIG", this.config);
 			
 		}
 	},
 
 	socketNotificationReceived: function (notification, payload) {
+		Log.info("socketNotificationReceived "+notification);
 		if (notification === "STATUS") {
 			this.updateUI(payload);
 		}
