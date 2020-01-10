@@ -44,7 +44,7 @@ module.exports = NodeHelper.create({
 
 	updateMessage: function(msg) {
         var self = this;
-        self.sendSocketNotification("STATUS", msg);
+        self.sendNotification("STATUS", msg);
     },
     
 	socketNotificationReceived: function(notification, payload) {
